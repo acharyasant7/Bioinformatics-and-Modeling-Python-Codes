@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Aug 27 17:42:20 2020
+
+@author: sandesh
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+#This function will create matrix with rows and columns with dimension given below.
+#The function will generate different sub-strings corresponding to the window, for both sequences.
+#while scanning different sub-strings for both sequences, if the number of matches will be equal or greater than stringency
+#a dot is placed in the dot plot, in the starting position of the window in both the sequences as x and y coordinate. 
+
+def DotPlot(seqA, seqB, win, matches):
+    row = len(seqA)- win+1
+    col = len(seqB) - win+1
+    
+    figure = plt.plot() 
+    for i in range(row):
+        for j in range(col):
+            count = 0
+            for m in range(0, win):
+                if seqA[m+i] == seqB[j+m]:
+                    count = count+1
+            if count >= matches:
+                
+                plt.scatter(i, j, s=10)
+    
+    
+    
+#Chain A and Chain B are the fasta files for Haemoglobin Chain A and B. 
+#The aim is to create a dot plot between these two sequences using window and stringency.
+                
+#Read the fasta file, and store the sequences as seqA and seq B
+seqA, seqB = '', ''
+with open(r"Chain A.fasta") as file:
+    for line in file:
+        if line[0] != '>':
+            seqA = seqA + line.strip()
+
+with open(r"Chain B.fasta") as file:
+    for line in file:
+        if line[0] != '>':
+            seqB = seqB + line.strip()
+            
+window = 5
+stringency= 3
+DotPlot(seqA, seqB, window, stringency)
