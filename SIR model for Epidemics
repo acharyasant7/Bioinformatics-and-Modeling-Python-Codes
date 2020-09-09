@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Aug 30 18:43:28 2020
+
+@author: sandesh
+"""
+#This is a very simple model for Epidemiological Study of any infection. 
+#This model includes a SIR and D model and simulates the change in population in each category as disease progesses. 
+#The key parameters are death rate, beta (which determines the transmission rate from infected to suceptible, that depends on contact)
+#and gamma: which determines the infection period, or the rate of recovery for patients. If a disease is treated in around 14 days, gamma is 1/14.
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+T = 365
+delT = 1
+beta = 1/4
+gamma = 1/10
+death = 200/20000
+
+div = int(T/ delT)
+S = np.zeros(div)
+I = np.zeros(div)
+R = np.zeros(div)
+D = np.zeros(div)
+T = np.zeros(div)
+N = 1000000
+S[0] = 1000000
+I[0] = 2
+R[0] = 0
+D[0] = 0
+T[0] = 0
+
+for i in range(1, div):
+    S[i] = S[i-1] -beta * S[i-1] * I[i-1] / N 
+    I[i] = I[i-1]+ beta * S[i-1] * I[i-1] /N - gamma * I[i-1] -I[i-1] * death
+    R[i] = R[i-1] + gamma * I[i-1]
+    T[i] = T[i-1] + delT
+    D[i] = D[i-1] + I[i-1] * death
+
+figure = plt.figure()
+plt.plot(T, S, 'b',label = "Susceptible")
+plt.plot(T, I, 'r', label = "Infected")
+plt.plot(T,R, 'g',label = "Recovered")
+plt.plot(T,D, 'y', label = "Dead")
+plt.xlabel("Time(in days")
+plt.ylabel("Population")
+plt.legend()
+        
